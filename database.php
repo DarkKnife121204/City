@@ -7,8 +7,12 @@ class Database {
     public $connection;
 
     public function connect() {
+        try{
+            $this->connection = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->user, $this->password);
+        } catch (PDOException $exception) {
+            echo $exception->getMessage();
+        }
 
-        $this->connection = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->user, $this->password);
 
         return $this->connection;
     }
