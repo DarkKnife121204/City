@@ -1,7 +1,11 @@
 <?php
+include "database.php";
 include_once "locality.php";
 
-$locate = new locality();
-$place = $locate->locate(305);
+$database = new database();
+$connection = $database->connect();
 
-echo($place["location"].' '.$place["location_type"]);
+$locate = new locality($connection);
+$place = $locate->locate(30);
+
+echo($place["location_type"].' '.$place["location"]);
