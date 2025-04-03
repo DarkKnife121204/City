@@ -2,6 +2,7 @@
 include "database.php";
 include_once "locality.php";
 include_once "unique.php";
+include_once "nickname.php";
 
 $database = new database();
 $connection = $database->connect();
@@ -45,7 +46,7 @@ $connection = $database->connect();
 <h2>Поле для уникального НП и его псевдонима</h2>
 <div>
     <div>
-        <form method="post" action="">
+        <form method="get" action="">
             <div style="margin-bottom: 15px">
                 <input name="search_unique" type="text" placeholder="Введите НП">
             </div>
@@ -55,16 +56,34 @@ $connection = $database->connect();
         </form>
     </div>
         <?php
-        if (isset($_POST["submit_search_unique"])) {
+        if (isset($_GET["submit_search_unique"])) {
             $unique = new unique($connection);
-            $uniqueId = $unique->unique($_POST["search_unique"]);
+            $uniqueId = $unique->unique($_GET["search_unique"]);
 
-            if ($uniqueId["result"] != 0) {
-                echo($uniqueId["result"]);
+
+            if ($uniqueId["number123"] != 0) {
+                $id = $uniqueId["number123"];
+                echo($id.'
+                    <div>
+                        <form method="post" action="">
+                            <div style="margin-bottom: 15px">
+                                <input name="nickname_unique" type="text" placeholder="Введите Псевдоним">
+                            </div>
+                            <div style="margin-bottom: 15px">
+                                <input type="submit" name="submit_nickname_unique" value="Ввод">
+                            </div>
+                        </form>
+                    </div>');
+                if (isset($_POST["submit_nickname_unique"])) {
+                    $nickname = new nickname($connection);
+                    $nickname->getNickname($_POST["nickname_unique"],$id);
+                }
             } else{
                 echo("Этот НП не уникальный");
             }
         }
+
+
         ?>
 </div>
 </body>
