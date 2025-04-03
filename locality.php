@@ -5,7 +5,7 @@ class locality
     {
         $this->connection = $db;
     }
-    function locate($id)
+    public function locate($id)
     {
         $query = "SELECT 
                     CASE 
@@ -19,13 +19,10 @@ class locality
                         WHEN region_type_full != '' THEN region
                     END AS location
                     FROM cities
-                    WHERE 1
-                    LIMIT ".$id.",1";
+                    WHERE number123 =?";
 
-
-
-        $stmt = $this->connection->query($query);
-
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
