@@ -1,6 +1,7 @@
 <?php
 include "database.php";
 include_once "locality.php";
+include_once "unique.php";
 
 $database = new database();
 $connection = $database->connect();
@@ -17,23 +18,56 @@ $connection = $database->connect();
     <title>City</title>
 </head>
 <body>
-<form method="post" action="">
-    <div style="margin-bottom: 15px">
-        <input name="id_locate" type="number" placeholder="Введите id">
-    </div>
-    <div style="margin-bottom: 15px">
-        <input type="submit" name="submit_locate" value="Поиск">
-    </div>
-</form>
+<h2>Поле для поиска НП по ID</h2>
 <div>
-    <?php
-        if (isset($_POST["submit_locate"])) {
-            $locate = new locality($connection);
-            $place = $locate->locate($_POST["id_locate"]);
+    <div>
+        <form method="post" action="">
+            <div style="margin-bottom: 15px">
+                <input name="id_locate" type="number" placeholder="Введите id">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_locate" value="Поиск">
+            </div>
+        </form>
+    </div>
+    <div>
+        <?php
+            if (isset($_POST["submit_locate"])) {
+                $locate = new locality($connection);
+                $place = $locate->locate($_POST["id_locate"]);
 
-            echo($place["location_type"] . ' ' . $place["location"]);
+                echo($place["location_type"] . ' ' . $place["location"]);
+            }
+        ?>
+    </div>
+</div>
+<hr>
+<h2>Поле для уникального НП и его псевдонима</h2>
+<div>
+    <div>
+        <form method="post" action="">
+            <div style="margin-bottom: 15px">
+                <input name="search_unique" type="text" placeholder="Введите НП">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_search_unique" value="Поиск">
+            </div>
+        </form>
+    </div>
+        <?php
+        if (isset($_POST["submit_search_unique"])) {
+            $unique = new unique($connection);
+            $uniqueId = $unique->unique($_POST["search_unique"]);
+
+            if ($uniqueId["result"] != 0) {
+                echo($uniqueId["result"]);
+            } else{
+                echo("Этот НП не уникальный");
+            }
         }
-    ?>
+        ?>
 </div>
 </body>
 </html>
+
+
