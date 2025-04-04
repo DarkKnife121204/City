@@ -61,7 +61,7 @@ $connection = $database->connect();
             $uniqueId = $unique->unique($_GET["search_unique"]);
 
 
-            if ($uniqueId["number123"] != 0) {
+            if ($uniqueId != false) {
                 $id = $uniqueId["number123"];
                 echo($id.'
                     <div>
