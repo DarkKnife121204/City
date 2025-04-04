@@ -3,6 +3,7 @@ include "database.php";
 include_once "locality.php";
 include_once "unique.php";
 include_once "nickname.php";
+include_once "address.php";
 
 $database = new database();
 $connection = $database->connect();
@@ -19,10 +20,10 @@ $connection = $database->connect();
     <title>City</title>
 </head>
 <body>
-<h2>Поле для поиска НП по ID</h2>
+<h2>Поле для поиска НП по id</h2>
 <div>
     <div>
-        <form method="post" action="">
+        <form method="get" action="">
             <div style="margin-bottom: 15px">
                 <input name="id_locate" type="number" placeholder="Введите id">
             </div>
@@ -33,9 +34,9 @@ $connection = $database->connect();
     </div>
     <div>
         <?php
-            if (isset($_POST["submit_locate"])) {
+            if (isset($_GET["submit_locate"])) {
                 $locate = new locality($connection);
-                $place = $locate->locate($_POST["id_locate"]);
+                $place = $locate->locate($_GET["id_locate"]);
 
                 echo($place["location_type"] . ' ' . $place["location"]);
             }
@@ -82,10 +83,80 @@ $connection = $database->connect();
                 echo("Этот НП не уникальный");
             }
         }
-
-
         ?>
 </div>
+<hr>
+<h2>Получение адреса по id</h2>
+<div>
+    <div>
+        <form method="get" action="">
+            <div style="margin-bottom: 15px">
+                <input name="id_address" type="number" placeholder="Введите id">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_id_address" value="Поиск">
+            </div>
+        </form>
+    </div>
+    <div>
+        <?php
+        if (isset($_GET["submit_id_address"])) {
+            $address = new address($connection);
+            $direction = $address->address($_GET["id_address"]);
+
+            foreach ($direction as $item) {
+                foreach ($item as $key => $value) {
+                    if (!empty($value)) {
+                        echo "$value\n";
+                    }
+                }
+            }
+        }
+        ?>
+    </div>
+</div>
+<hr>
+<h2>Получение адреса и id по начальному адресу </h2>
+<div>
+    <div>
+        <form method="get" action="">
+            <div style="margin-bottom: 15px">
+                <input name="search_unique" type="text" placeholder="Введите НП">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_search_unique" value="Поиск">
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<h2>Получение усеченого адреса </h2>
+<div>
+    <div>
+        <form method="get" action="">
+            <div style="margin-bottom: 15px">
+                <input name="search_unique" type="text" placeholder="Введите НП">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_search_unique" value="Поиск">
+            </div>
+        </form>
+    </div>
+</div>
+<hr><h2>Получение конкретной информации </h2>
+<div>
+    <div>
+        <form method="get" action="">
+            <div style="margin-bottom: 15px">
+                <input name="search_unique" type="text" placeholder="Введите НП">
+            </div>
+            <div style="margin-bottom: 15px">
+                <input type="submit" name="submit_search_unique" value="Поиск">
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
 </body>
 </html>
 
